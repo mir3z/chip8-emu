@@ -2,6 +2,7 @@ CHIP-8 Emulator
 ===============
 
 This is a [CHIP-8](http://en.wikipedia.org/wiki/CHIP-8) emulator written in JavaScript.
+Try it here: http://mir3z.github.io/chip8-emu/
 
 Features
 --------
