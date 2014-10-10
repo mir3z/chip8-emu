@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>CHIP-8 Emulator Source: chip8-keyboard.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.spacelab.css">
+
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">CHIP-8 Emulator</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="chip8.html">chip8</a>
+						</li>
+						
+						<li>
+							<a href="chip8.CPU.IS.html">chip8.CPU.IS</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="chip8.Audio.html">chip8.Audio</a>
+						</li>
+						
+						<li>
+							<a href="chip8.CanvasScreen.html">chip8.CanvasScreen</a>
+						</li>
+						
+						<li>
+							<a href="chip8.CPU.html">chip8.CPU</a>
+						</li>
+						
+						<li>
+							<a href="chip8.Keyboard.html">chip8.Keyboard</a>
+						</li>
+						
+						<li>
+							<a href="chip8.Screen.html">chip8.Screen</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: chip8-keyboard.js</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">var chip8;
+
+(function (chip8) {
+    'use strict';
+
+    /**
+     * Creates keyboard instance which handles chip8 input.
+     * @class chip8.Keyboard
+     */
+    function Keyboard() {
+        var reversedKey,
+            self = this;
+
+        this.keyState = new Array(16);
+
+        for (var key in Keyboard.PC_KEY_MAP) {
+            if (Keyboard.PC_KEY_MAP.hasOwnProperty(key)) {
+                reversedKey = 'KEY_' + (Keyboard.PC_KEY_MAP[key]).toString(16).toUpperCase();
+                Keyboard.CHIP8_KEYS[reversedKey] = parseInt(key, 10);
+            }
+        }
+
+        function onKeyDown(e) {
+            var key = e.which || e.keyCode,
+                chip8Key = Keyboard.PC_KEY_MAP[key];
+
+            if (typeof chip8Key !== 'undefined') {
+                self.keyDown(chip8Key);
+            }
+        }
+
+        function onKeyUp(e) {
+            var key = e.which || e.keyCode,
+                chip8Key = Keyboard.PC_KEY_MAP[key];
+
+            if (typeof chip8Key !== 'undefined') {
+                self.keyUp(chip8Key);
+            }
+        }
+
+        /**
+         * This method is called and set to NOP after each key down.
+         * @param {number} chip8Key - pressed key number (0x0 - 0xF)
+         * @function onNextKeyPressed
+         * @memberof chip8.Keyboard
+         * @instance
+         */
+        this.onNextKeyPressed = function (chip8Key) {
+            // override in class instance
+            void chip8Key;
+        };
+
+        window.removeEventListener('keydown',onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+
+        window.addEventListener('keydown', onKeyDown, false);
+        window.addEventListener('keyup', onKeyUp, false);
+    }
+
+    /**
+     * Checks if given key is pressed.
+     * @param {number} key - key number (0x0 - 0xF)
+     * @returns {boolean} true if key is pressed, false otherwise
+     * @function isKeyPressed
+     * @memberof chip8.Keyboard
+     * @instance
+     */
+    Keyboard.prototype.isKeyPressed = function (key) {
+        return !!this.keyState[key];
+    };
+
+    /**
+     * Simulates key down.
+     * @param {number} chip8Key - key number (0x0 - 0xF)
+     * @function keyDown
+     * @memberof chip8.Keyboard
+     * @instance
+     */
+    Keyboard.prototype.keyDown = function (chip8Key) {
+        this.keyState[chip8Key] = true;
+        this.onNextKeyPressed(chip8Key);
+        this.onNextKeyPressed = function () {};
+    };
+
+    /**
+     * Simulates key up.
+     * @param {number} chip8Key - key number (0x0 - 0xF)
+     * @function keyUp
+     * @memberof chip8.Keyboard
+     * @instance
+     */
+    Keyboard.prototype.keyUp = function (chip8Key) {
+        this.keyState[chip8Key] = false;
+    };
+
+    /**
+     * Resets keyboard state.
+     * @function reset
+     * @memberof chip8.Keyboard
+     * @instance
+     */
+    Keyboard.prototype.reset = function () {
+        this.keyState = new Array(16);
+        this.onNextKeyPressed = function () {};
+    };
+
+    /**
+     * Maps PC keys to chip8 keys.
+     * @memberof chip8.Keyboard
+     * @type {Object}
+     * @enum
+     */
+    Keyboard.PC_KEY_MAP = {
+        88: 0x0,
+        49: 0x1,
+        50: 0x2,
+        51: 0x3,
+        81: 0x4,
+        87: 0x5,
+        69: 0x6,
+        65: 0x7,
+        83: 0x8,
+        68: 0x9,
+        90: 0xA,
+        67: 0xB,
+        52: 0xC,
+        82: 0xD,
+        70: 0xE,
+        86: 0xF
+    };
+
+    /**
+     * Maps chip8 keys to PC keys.
+     * Populated in constructor.
+     * @memberof chip8.Keyboard
+     * @type {Object}
+     */
+    Keyboard.CHIP8_KEYS = {};
+
+    chip8.Keyboard = Keyboard;
+
+})(chip8 || (chip8 = {}));</pre>
+	</article>
+</section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="copyright">
+		CHIP-8 Emulator Copyright © 2014 by mirz
+		</span>
+					<br />
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
+		on Sat Oct 11th 2014 using the <a
+			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<!--<script src="scripts/sunlight.js"></script>-->
+	<script src="scripts/docstrap.lib.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+	<script>
+		$( function () {
+			$( "[id*='$']" ).each( function () {
+				var $this = $( this );
+
+				$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+			} );
+
+			$( "#toc" ).toc( {
+				anchorName  : function ( i, heading, prefix ) {
+					return $( heading ).attr( "id" ) || ( prefix + i );
+				},
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : "100px"
+			} );
+
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+			$( '.dropdown-toggle' ).dropdown();
+//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+			$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+				var $this = $( this );
+
+				var example = $this.find( "code" );
+				exampleText = example.html();
+				var lang = /{@lang (.*?)}/.exec( exampleText );
+				if ( lang && lang[1] ) {
+					exampleText = exampleText.replace( lang[0], "" );
+					example.html( exampleText );
+					lang = lang[1];
+				} else {
+					lang = "javascript";
+				}
+
+				if ( lang ) {
+
+					$this
+						.addClass( "sunlight-highlight-" + lang )
+						.addClass( "linenums" )
+						.html( example.html() );
+
+				}
+			} );
+
+			Sunlight.highlightAll( {
+				lineNumbers : true,
+				showMenu : true,
+				enableDoclinks : true
+			} );
+		} );
+	 </script>
+
+
+
+	<!--Navigation and Symbol Display-->
+	
+
+
+	<!--Google Analytics-->
+	
+
+</body>
+</html>
