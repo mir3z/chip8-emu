@@ -46,7 +46,7 @@ chip8.loadROM('roms/Puzzle.ch8', function () {
 });
 ```
 
-Take a look at [API documentation](mir3z.github.io/chip8-emu/doc/) the learn more advanced usage.
+Take a look at [API documentation](http://mir3z.github.io/chip8-emu/doc/) the learn more advanced usage.
 
 Browser Support
 ---------------
