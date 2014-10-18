@@ -9,16 +9,17 @@ Features
 
 The emulator has a decent implementation of all 35 CHIP-8 op-codes, all of which are well-tested.
 
-Two known "quirks" have also been implemented (see: `chip8.CPU#quirks`):
+Two known "quirks" have also been implemented (see: [`chip8.CPU#quirks`](http://mir3z.github.io/chip8-emu/doc/chip8.CPU.html#toc5)):
 
 * Load/store quirks - Instructions `LD [I], Vx` and `LD Vx, [I]` increments value of I register but some CHIP-8 
 programs assumes that they don't.
 * Shift quirks - Shift instructions originally shift register VY and store results in register VX. Some CHIP-8 
 programs incorrectly assumes that the VX register is shifted by this instruction, and VY remains unmodified.
 
-Project repository contains 90 CHIP-8 roms which can be found at http://chip8.com (CHIP-8 Program Pack). All of them
-were checked and should work fine. It is a common issue among emulators I have tested, that some of ROMS were not
-working correctly - this is mostly because of quirks I have mentioned above and errors in op-codes implementation.
+Project repository contains 90 CHIP-8 roms and their descriptions which can be found at http://chip8.com 
+(CHIP-8 Program Pack). All of them were checked and should work fine on the emulator. It is a common issue among 
+emulators I have tested, that some of ROMS were not working correctly - this is mostly because of quirks I have 
+mentioned above and errors in op-codes implementation.
 
 Original CHIP-8 keyboard layout is mapped to PC keyboard as follows by default:
     
@@ -29,6 +30,8 @@ Original CHIP-8 keyboard layout is mapped to PC keyboard as follows by default:
 
 Usage
 -----
+
+The simplest way to set up the emulator is the following code:
 
 ```
 // Initialize chip8 with default options
@@ -42,6 +45,8 @@ chip8.loadROM('roms/Puzzle.ch8', function () {
     chip8.run();
 });
 ```
+
+Take a look at [API documentation](mir3z.github.io/chip8-emu/doc/) the learn more advanced usage.
 
 Browser Support
 ---------------
