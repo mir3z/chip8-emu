@@ -7,10 +7,11 @@
     "grunt": "^0.4.5",
     "grunt-closurecompiler": "^0.9.9",
     "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.1",
     "grunt-contrib-jasmine": "^0.7.0",
     "grunt-contrib-jshint": "^0.10.0",
-    "grunt-if-missing": "^1.0.0",
-    "grunt-jsdoc": "^0.5.7"
+    "grunt-jsdoc": "^0.5.7",
+    "grunt-umd": "^2.3.3"
   },
   "repository": {
     "type": "git",

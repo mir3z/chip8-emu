@@ -26,14 +26,32 @@ module.exports = function (grunt) {
     grunt.initConfig({
         _TARGET: BUILD_DIR + BUILD_TARGET,
 
+        concat: {
+            dist: {
+                src: SRC_FILES,
+                dest: '<%= _TARGET %>'
+            }
+        },
+
         closurecompiler: {
             minify: {
                 files: {
-                    "<%= _TARGET %>": SRC_FILES
+                    "<%= _TARGET %>": '<%= _TARGET %>'
                 },
                 options: {
                     "compilation_level": "SIMPLE_OPTIMIZATIONS",
                     "banner": '/*\n' + require('fs').readFileSync('LICENSE', { encoding: 'utf8' }) + '*/'
+                }
+            }
+        },
+
+        umd: {
+            build: {
+                options: {
+                    src: '<%= _TARGET %>',
+                    dest: '<%= _TARGET %>',
+                    objectToExport: 'chip8',
+                    template: 'umd.hbs'
                 }
             }
         },
@@ -80,12 +98,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-closurecompiler');
-    grunt.loadNpmTasks('grunt-if-missing');
+    grunt.loadNpmTasks('grunt-umd');
+    grunt.loadNpmTasks('grunt-contrib-concat');
 
     grunt.registerTask('dist', ['build', 'jsdoc']);
-    grunt.registerTask('build', ['closurecompiler:minify']);
-    grunt.registerTask('build-if-needed', [ 'if-missing:closurecompiler:minify' ]);
-    grunt.registerTask('test:prod', ['build-if-needed', 'jasmine:prod']);
+    grunt.registerTask('build', ['concat', 'umd:build', 'closurecompiler:minify']);
+    grunt.registerTask('test:prod', ['jasmine:prod']);
     grunt.registerTask('test:dev', ['jasmine:dev']);
     grunt.registerTask('test', ['test:dev']);
     grunt.registerTask('default', ['build']);
